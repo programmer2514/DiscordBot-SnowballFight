@@ -64,9 +64,9 @@ async def throw(ctx, member: discord.Member):
         globalUserDict[str(ctx.author.id) + ".snowballs"] = 0
     else:
         try:
-            randChance = 33 + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('1a') * 10) + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('1b') * 25) + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('1c') * 50) + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('4') * 15)
+            randChance = 40 + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('1a') * 10) + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('1b') * 25) + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('1c') * 50) + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('4') * 15)
         except:
-            randChance = 33
+            randChance = 40
         try:
             randChance = randChance - (globalUserDict[str(member.id) + ".modifiers"].count('2a') * 33) - (globalUserDict[str(member.id) + ".modifiers"].count('2b') * 66) - (globalUserDict[str(member.id) + ".modifiers"].count('2c') * 100)
         except:
@@ -76,7 +76,10 @@ async def throw(ctx, member: discord.Member):
                 message = '''<@{0}> threw a snowball at themselves (for some reason)!
 They now have {1} snowball(s) remaining.'''.format(ctx.author.id, globalUserDict[str(ctx.author.id) + ".snowballs"])
             else:
-                coins = pow(2,(globalUserDict[str(ctx.author.id) + ".modifiers"].count('3a') + globalUserDict[str(ctx.author.id) + ".modifiers"].count('5'))) * pow(3,globalUserDict[str(ctx.author.id) + ".modifiers"].count('3b')) * pow(4,globalUserDict[str(ctx.author.id) + ".modifiers"].count('3c'))
+                try:
+                    coins = pow(2,(globalUserDict[str(ctx.author.id) + ".modifiers"].count('3a') + globalUserDict[str(ctx.author.id) + ".modifiers"].count('5'))) * pow(3,globalUserDict[str(ctx.author.id) + ".modifiers"].count('3b')) * pow(4,globalUserDict[str(ctx.author.id) + ".modifiers"].count('3c'))
+                except:
+                    coins = 1
                 message = '''Splat! <@{0}> threw a snowball at <@{2}> and got \U0001FA99{3}!
 They now have {1} snowball(s) remaining.'''.format(ctx.author.id, globalUserDict[str(ctx.author.id) + ".snowballs"], member.id, coins)
                 try:
