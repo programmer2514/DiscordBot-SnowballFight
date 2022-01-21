@@ -260,7 +260,7 @@ async def buy(ctx, item: str):
         await ctx.send(message + '''
 {0} now has \U0001FA99{1}'''.format(ctx.author.name, coins))
         if (len(powerup) > 0):
-            await asyncio.sleep(60)
+            await asyncio.sleep(480)
             globalUserDict[str(ctx.author.id) + ".modifiers"] = globalUserDict[str(ctx.author.id) + ".modifiers"].replace(powerup, '', 1)
             with open('snowballs.json', 'w', encoding='utf-8') as f:
                 json.dump(globalUserDict, f, ensure_ascii=False, indent=4)
