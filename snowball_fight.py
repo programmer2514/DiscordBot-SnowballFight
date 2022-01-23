@@ -24,6 +24,7 @@ powerupNames = {'1a': 'Accuracy +10%',
 try:
     with open('snowballs.json', 'r', encoding='utf-8') as f:
         globalUserDict = json.load(f)
+    print('Config loaded successfully')
 except:
     print('No config found! A new one will be created')
 
@@ -46,10 +47,13 @@ Collects a snowball and adds it to your pile.''')
 async def collect(ctx):
     try:
         globalUserDict[str(ctx.author.id) + ".snowballs"] = globalUserDict[str(ctx.author.id) + ".snowballs"] + 1
+        print('Added 1 snowball to user {0} ({1})'.format(ctx.author.name, ctx.author.id))
     except:
         globalUserDict[str(ctx.author.id) + ".snowballs"] = 1
+        print('No previous snowball index found for user {0} ({1})! One will be created'.format(ctx.author.name, ctx.author.id))
     with open('snowballs.json', 'w', encoding='utf-8') as f:
         json.dump(globalUserDict, f, ensure_ascii=False, indent=4)
+    print('Settings file written successfully')
     await ctx.send('<@{0}> collected a snowball! They now have {1} snowball(s).'.format(ctx.author.id, globalUserDict[str(ctx.author.id) + ".snowballs"]))
 
 @bot.command(brief='Throws a snowball at someone', description='''SYNTAX: s!throw [@]<username>
@@ -57,18 +61,23 @@ Throws a snowball at the specified user and gives you a coin if the throw is suc
 async def throw(ctx, member: discord.Member):
     try:
         globalUserDict[str(ctx.author.id) + ".snowballs"] = globalUserDict[str(ctx.author.id) + ".snowballs"] - 1
+        print('Removed 1 snowball from user {0} ({1})'.format(ctx.author.name, ctx.author.id))
     except:
         globalUserDict[str(ctx.author.id) + ".snowballs"] = -1
+        print('No previous snowball index found for user {0} ({1})! One will be created'.format(ctx.author.name, ctx.author.id))
     if (globalUserDict[str(ctx.author.id) + ".snowballs"] < 0):
         message = '''<@{0}> doesn't have any snowballs! Use `s!collect` to get some.'''.format(ctx.author.id)
         globalUserDict[str(ctx.author.id) + ".snowballs"] = 0
     else:
         try:
             randChance = 40 + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('1a') * 10) + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('1b') * 25) + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('1c') * 50) + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('4') * 15)
+            print('Successfully applied throwing user modifiers')
         except:
             randChance = 40
+            print('Throwing user does not have modifiers')
         try:
             randChance = randChance - (globalUserDict[str(member.id) + ".modifiers"].count('2a') * 33) - (globalUserDict[str(member.id) + ".modifiers"].count('2b') * 66) - (globalUserDict[str(member.id) + ".modifiers"].count('2c') * 100)
+            print('Successfully applied targeted user modifiers')
         except:
             print('Targeted user does not have modifiers')
         if (random.randint(0, 99) < randChance):
@@ -78,19 +87,24 @@ They now have {1} snowball(s) remaining.'''.format(ctx.author.id, globalUserDict
             else:
                 try:
                     coins = pow(2,(globalUserDict[str(ctx.author.id) + ".modifiers"].count('3a') + globalUserDict[str(ctx.author.id) + ".modifiers"].count('5'))) * pow(3,globalUserDict[str(ctx.author.id) + ".modifiers"].count('3b')) * pow(4,globalUserDict[str(ctx.author.id) + ".modifiers"].count('3c'))
+                    print('Successfully applied coin modifiers')
                 except:
+                    print('User does not have any coin modifiers')
                     coins = 1
                 message = '''Splat! <@{0}> threw a snowball at <@{2}> and got \U0001FA99{3}!
 They now have {1} snowball(s) remaining.'''.format(ctx.author.id, globalUserDict[str(ctx.author.id) + ".snowballs"], member.id, coins)
                 try:
                     globalUserDict[str(ctx.author.id) + ".coins"] = globalUserDict[str(ctx.author.id) + ".coins"] + coins
+                    print('Added {2} coin(s) to user {0} ({1})'.format(ctx.author.name, ctx.author.id, coins))
                 except:
                     globalUserDict[str(ctx.author.id) + ".coins"] = coins
+                    print('No previous coin index found for user {0} ({1})! One will be created'.format(ctx.author.name, ctx.author.id))
         else:
             message = '''<@{0}> threw a snowball, but it missed!
 They now have {1} snowball(s) remaining.'''.format(ctx.author.id, globalUserDict[str(ctx.author.id) + ".snowballs"])
     with open('snowballs.json', 'w', encoding='utf-8') as f:
         json.dump(globalUserDict, f, ensure_ascii=False, indent=4)
+    print('Settings file written successfully')
     await ctx.send(message)
 
 @bot.command(brief='Checks how many coins you have', description='''SYNTAX: s!coins
@@ -154,6 +168,7 @@ async def buy(ctx, item: str):
                 globalUserDict[str(ctx.author.id) + ".modifiers"] = modifiers + '4'
                 coins = coins - 100
                 message = 'Modifier purchased successfully!'
+                print('User {0} ({1}) bought modifier 4 for 100 coins'.format(ctx.author.name, ctx.author.id))
             else:
                 message = 'Not enough coins!'
         if (item[0] == '5'):
@@ -161,11 +176,13 @@ async def buy(ctx, item: str):
                 globalUserDict[str(ctx.author.id) + ".modifiers"] = modifiers + '5'
                 coins = coins - 200
                 message = 'Modifier purchased successfully!'
+                print('User {0} ({1}) bought modifier 5 for 200 coins'.format(ctx.author.name, ctx.author.id))
             else:
                 message = 'Not enough coins!'
         globalUserDict[str(ctx.author.id) + ".coins"] = coins
         with open('snowballs.json', 'w', encoding='utf-8') as f:
             json.dump(globalUserDict, f, ensure_ascii=False, indent=4)
+        print('Settings file written successfully')
         await ctx.send(message + '''
 {0} now has \U0001FA99{1}'''.format(ctx.author.name, coins))
     if (len(item) == 2):
@@ -257,13 +274,17 @@ async def buy(ctx, item: str):
         globalUserDict[str(ctx.author.id) + ".coins"] = coins
         with open('snowballs.json', 'w', encoding='utf-8') as f:
             json.dump(globalUserDict, f, ensure_ascii=False, indent=4)
+        print('Settings file written successfully')
         await ctx.send(message + '''
 {0} now has \U0001FA99{1}'''.format(ctx.author.name, coins))
         if (len(powerup) > 0):
+            print('User {0} ({1}) bought powerup {2} for 200 coins'.format(ctx.author.name, ctx.author.id, powerup))
             await asyncio.sleep(480)
+            print('User {0} ({1}) powerup {2} expired'.format(ctx.author.name, ctx.author.id, powerup))
             globalUserDict[str(ctx.author.id) + ".modifiers"] = globalUserDict[str(ctx.author.id) + ".modifiers"].replace(powerup, '', 1)
             with open('snowballs.json', 'w', encoding='utf-8') as f:
                 json.dump(globalUserDict, f, ensure_ascii=False, indent=4)
+            print('Settings file written successfully')
             await ctx.send("<@" + str(ctx.author.id) + "> Your powerup ({0}) has expired!".format(powerupNames[powerup]))
 
 @bot.command(brief='Shows the global leaderboard', description='''SYNTAX: s!leaderboard
@@ -280,6 +301,7 @@ async def leaderboard(ctx):
             else:
                 break
     if (len(leaderboard) > 0):
+        print('Loaded leaderboard with {0} items'.format(len(leaderboard)))
         for i in range(len(leaderboard)):
             username = await bot.fetch_user(leaderboard[i][0][:-6])
             message = message + '''{2}: {0} - {1}
