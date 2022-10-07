@@ -70,12 +70,18 @@ async def throw(ctx, member: discord.Member):
     else:
         try:
             randChance = 40 + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('1a') * 10) + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('1b') * 25) + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('1c') * 50) + (globalUserDict[str(ctx.author.id) + ".modifiers"].count('4') * 15)
+            if (randChance > 95):
+                randChance = 95
+                print('Throwing user has maxed out accuracy')
             print('Successfully applied throwing user modifiers')
         except:
             randChance = 40
             print('Throwing user does not have modifiers')
         try:
             randChance = randChance - (globalUserDict[str(member.id) + ".modifiers"].count('2a') * 33) - (globalUserDict[str(member.id) + ".modifiers"].count('2b') * 66) - (globalUserDict[str(member.id) + ".modifiers"].count('2c') * 100)
+            if (randChance < 5):
+                randChance = 5
+                print('Targeted user has maxed out shield')
             print('Successfully applied targeted user modifiers')
         except:
             print('Targeted user does not have modifiers')
@@ -85,7 +91,7 @@ async def throw(ctx, member: discord.Member):
 They now have {1} snowball(s) remaining.'''.format(ctx.author.id, globalUserDict[str(ctx.author.id) + ".snowballs"])
             else:
                 try:
-                    coins = pow(2,(globalUserDict[str(ctx.author.id) + ".modifiers"].count('3a') + globalUserDict[str(ctx.author.id) + ".modifiers"].count('5'))) * pow(3,globalUserDict[str(ctx.author.id) + ".modifiers"].count('3b')) * pow(4,globalUserDict[str(ctx.author.id) + ".modifiers"].count('3c'))
+                    coins = (2 * (globalUserDict[str(ctx.author.id) + ".modifiers"].count('3a') + globalUserDict[str(ctx.author.id) + ".modifiers"].count('5'))) + (3 * globalUserDict[str(ctx.author.id) + ".modifiers"].count('3b')) + (4 * globalUserDict[str(ctx.author.id) + ".modifiers"].count('3c'))
                     print('Successfully applied coin modifiers')
                 except:
                     print('User does not have any coin modifiers')
@@ -308,4 +314,4 @@ async def leaderboard(ctx):
     message = message + '```'
     await ctx.send(message)
 
-bot.run('[REDACTED]')
+bot.run('OTMzNzM5Mjg2MjQxNjQwNTA4.Yel6eQ.FCJObEdsym29ct_WFTDI5-8eoBY')
