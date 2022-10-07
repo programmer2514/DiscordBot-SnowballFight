@@ -314,4 +314,4 @@ async def leaderboard(ctx):
     message = message + '```'
     await ctx.send(message)
 
-bot.run('OTMzNzM5Mjg2MjQxNjQwNTA4.Yel6eQ.FCJObEdsym29ct_WFTDI5-8eoBY')
+bot.run('[REDACTED]')
