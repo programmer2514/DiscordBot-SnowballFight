@@ -285,7 +285,7 @@ async def buy(ctx, item: str):
         print('Settings file written successfully')
 
         # Send message
-        await ctx.send("<@{0}> Your powerup (**{1}**) has expired!".format(ctx.author.name, powerupNames[item]))
+        await ctx.send("<@{0}> Your powerup (**{1}**) has expired!".format(ctx.author.id, powerupNames[item]))
 
 
 @bot.command(brief='Shows the global leaderboard', description='''SYNTAX: s!leaderboard
